@@ -17,8 +17,8 @@ fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
     commands.spawn((
         Node {
-            width: Val::Px(100.0),
-            height: Val::Px(100.0),
+            width: Val::Px(30.0),
+            height: Val::Px(30.0),
             position_type: PositionType::Absolute,
             top: Val::Px(0.0),
             ..default()
