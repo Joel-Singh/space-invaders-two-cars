@@ -5,6 +5,9 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 #[derive(Component)]
 struct Enemy;
 
+
+const FALLING_SPEED: f32 = 100.0;
+
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, WorldInspectorPlugin::new()))
@@ -32,7 +35,9 @@ fn setup_camera(mut commands: Commands) {
 fn move_enemies_down(mut enemies: Query<&mut Node, With<Enemy>>, time: Res<Time>) {
     for mut node in enemies.iter_mut() {
         match node.top {
-            Val::Px(value) => node.top = Val::Px(value + 1.0 * time.delta_secs()),
+            Val::Px(value) => {
+                node.top = Val::Px(value + FALLING_SPEED * time.delta_secs())
+            },
             _ => panic!(),
         }
     }
