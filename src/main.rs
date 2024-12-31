@@ -1,5 +1,7 @@
 
-use bevy::{color::palettes::tailwind::PINK_800, prelude::*};
+use std::time::Duration;
+
+use bevy::{color::palettes::tailwind::PINK_800, prelude::*, time::common_conditions::on_timer};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 #[derive(Component)]
@@ -13,11 +15,15 @@ fn main() {
         .add_plugins((DefaultPlugins, WorldInspectorPlugin::new()))
         .add_systems(Startup, setup_camera)
         .add_systems(FixedUpdate, move_enemies_down)
+        .add_systems(FixedUpdate, spawn_enemy.run_if(on_timer(Duration::from_secs(1))))
         .run();
 }
 
 fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
+}
+
+fn spawn_enemy(mut commands: Commands) {
     commands.spawn((
         Node {
             width: Val::Px(30.0),
@@ -28,7 +34,7 @@ fn setup_camera(mut commands: Commands) {
         },
         BackgroundColor(PINK_800.into()),
         Enemy,
-        Name::new("Test Enemy")
+        Name::new("Enemy")
     ));
 }
 
