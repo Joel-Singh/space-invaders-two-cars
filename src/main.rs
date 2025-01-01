@@ -64,6 +64,10 @@ fn spawn_cannonball(
         Mesh2d(meshes.add(Circle::new(30.0))),
         MeshMaterial2d(materials.add(color)),
         Cannonball,
+        Transform {
+            translation: Vec3::new(0.0, -250.0, 0.0),
+            ..default()
+        },
         Name::new("Cannonball"),
     ));
 }
