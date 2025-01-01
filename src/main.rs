@@ -24,13 +24,16 @@ fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
 }
 
-fn spawn_enemy(mut commands: Commands) {
+fn spawn_enemy(mut commands: Commands, window: Single<&Window>) {
+    let width = window.width();
     commands.spawn((
         Node {
             width: Val::Px(30.0),
             height: Val::Px(30.0),
             position_type: PositionType::Absolute,
             top: Val::Px(0.0),
+            // Generate a random left position from 0 to width
+            left: Val::Px(rand::random::<f32>() * width),
             ..default()
         },
         BackgroundColor(PINK_800.into()),
