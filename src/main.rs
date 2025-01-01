@@ -1,4 +1,3 @@
-
 use std::time::Duration;
 
 use bevy::{color::palettes::tailwind::PINK_800, prelude::*, time::common_conditions::on_timer};
@@ -7,7 +6,6 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 #[derive(Component)]
 struct Enemy;
 
-
 const FALLING_SPEED: f32 = 100.0;
 
 fn main() {
@@ -15,7 +13,10 @@ fn main() {
         .add_plugins((DefaultPlugins, WorldInspectorPlugin::new()))
         .add_systems(Startup, setup_camera)
         .add_systems(FixedUpdate, move_enemies_down)
-        .add_systems(FixedUpdate, spawn_enemy.run_if(on_timer(Duration::from_secs(1))))
+        .add_systems(
+            FixedUpdate,
+            spawn_enemy.run_if(on_timer(Duration::from_secs(1))),
+        )
         .run();
 }
 
@@ -34,16 +35,14 @@ fn spawn_enemy(mut commands: Commands) {
         },
         BackgroundColor(PINK_800.into()),
         Enemy,
-        Name::new("Enemy")
+        Name::new("Enemy"),
     ));
 }
 
 fn move_enemies_down(mut enemies: Query<&mut Node, With<Enemy>>, time: Res<Time>) {
     for mut node in enemies.iter_mut() {
         match node.top {
-            Val::Px(value) => {
-                node.top = Val::Px(value + FALLING_SPEED * time.delta_secs())
-            },
+            Val::Px(value) => node.top = Val::Px(value + FALLING_SPEED * time.delta_secs()),
             _ => panic!(),
         }
     }
