@@ -50,6 +50,7 @@ fn spawn_cannon(mut commands: Commands) {
             },
             BackgroundColor(GRAY_400.into()),
             Name::new("Cannon"),
+            Cannon,
         ));
 }
 
