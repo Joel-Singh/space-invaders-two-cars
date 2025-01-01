@@ -1,5 +1,6 @@
 use bevy::{
     color::palettes::tailwind::{GRAY_400, GRAY_900, PINK_800},
+    input::common_conditions::input_just_pressed,
     prelude::*,
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -22,7 +23,11 @@ fn main() {
             WorldInspectorPlugin::new(),
             spawning_enemies,
         ))
-        .add_systems(Startup, (setup_camera, spawn_cannon, spawn_cannonball))
+        .add_systems(Startup, (setup_camera, spawn_cannon))
+        .add_systems(
+            FixedUpdate,
+            spawn_cannonball.run_if(input_just_pressed(KeyCode::Space)),
+        )
         .run();
 }
 
