@@ -64,6 +64,7 @@ fn spawn_cannonball(
         Mesh2d(meshes.add(Circle::new(30.0))),
         MeshMaterial2d(materials.add(color)),
         Cannonball,
+        Name::new("Cannonball"),
     ));
 }
 
