@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_PI_2;
+
 use bevy::{
     color::palettes::tailwind::{GRAY_400, GRAY_900, PINK_800},
     input::common_conditions::input_just_pressed,
@@ -26,7 +28,10 @@ fn main() {
         .add_systems(Startup, (setup_camera, spawn_cannon))
         .add_systems(
             FixedUpdate,
-            spawn_cannonball.run_if(input_just_pressed(KeyCode::Space)),
+            (
+                spawn_cannonball.run_if(input_just_pressed(KeyCode::Space)),
+                move_cannonballs_forward,
+            ),
         )
         .run();
 }
@@ -71,11 +76,23 @@ fn spawn_cannonball(
         MeshMaterial2d(materials.add(color)),
         Cannonball,
         Transform {
-            translation: Vec3::new(0.0, CANNON_HEIGHT + 10.0 - window_height / 2.0, 0.0),
+            translation: Vec3::new(0.0, CANNON_HEIGHT + 30.0 - window_height / 2.0, 0.0),
+            rotation: Quat::from_rotation_z(0.0),
             ..default()
         },
         Name::new("Cannonball"),
     ));
+}
+
+fn move_cannonballs_forward(
+    mut cannonballs: Query<&mut Transform, With<Cannonball>>,
+    time: Res<Time>,
+) {
+    for mut cannonball in cannonballs.iter_mut() {
+        let forward = cannonball.local_x();
+        const SPEED: f32 = 100.0;
+        cannonball.translation += forward * SPEED * time.delta_secs();
+    }
 }
 
 fn setup_camera(mut commands: Commands) {
