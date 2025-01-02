@@ -31,6 +31,9 @@ fn main() {
         .run();
 }
 
+const CANNON_HEIGHT: f32 = 100.0;
+const CANNON_WIDTH: f32 = 50.0;
+
 fn spawn_cannon(mut commands: Commands) {
     commands
         .spawn((
@@ -44,8 +47,8 @@ fn spawn_cannon(mut commands: Commands) {
         ))
         .with_child((
             Node {
-                width: Val::Px(50.0),
-                height: Val::Px(100.0),
+                width: Val::Px(CANNON_WIDTH),
+                height: Val::Px(CANNON_HEIGHT),
                 ..default()
             },
             BackgroundColor(GRAY_400.into()),
@@ -58,14 +61,17 @@ fn spawn_cannonball(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+    window: Single<&Window>,
 ) {
+    let window_height = window.height();
+
     let color: Color = GRAY_900.into();
     commands.spawn((
         Mesh2d(meshes.add(Circle::new(30.0))),
         MeshMaterial2d(materials.add(color)),
         Cannonball,
         Transform {
-            translation: Vec3::new(0.0, -250.0, 0.0),
+            translation: Vec3::new(0.0, CANNON_HEIGHT + 10.0 - window_height / 2.0, 0.0),
             ..default()
         },
         Name::new("Cannonball"),
