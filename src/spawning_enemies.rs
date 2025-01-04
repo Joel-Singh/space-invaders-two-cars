@@ -1,8 +1,7 @@
 use crate::FALLING_SPEED;
-use crate::PINK_800;
 use std::time::Duration;
 
-use bevy::{prelude::*, time::common_conditions::on_timer};
+use bevy::{color::palettes::tailwind::PINK_800, prelude::*, time::common_conditions::on_timer};
 
 #[derive(Component)]
 pub struct Enemy;
