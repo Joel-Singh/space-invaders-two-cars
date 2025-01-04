@@ -1,5 +1,3 @@
-use std::f32::consts::FRAC_PI_2;
-
 use bevy::{
     color::palettes::tailwind::{GRAY_400, GRAY_900, PINK_800},
     input::common_conditions::input_just_pressed,
@@ -66,9 +64,25 @@ fn spawn_cannonball(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+    camera_query: Single<(&Camera, &GlobalTransform)>,
     window: Single<&Window>,
 ) {
-    let window_height = window.height();
+    let (camera, camera_transform) = *camera_query;
+
+    let cursor_position_as_world = camera
+        .viewport_to_world_2d(
+            camera_transform,
+            window.cursor_position().unwrap_or(Vec2::ZERO),
+        )
+        .unwrap();
+
+    let translation = Vec3::new(0.0, CANNON_HEIGHT + 30.0 - window.height() / 2.0, 0.0);
+
+    let angle_to_face_cursor = {
+        let x = cursor_position_as_world.x - translation.x;
+        let y = cursor_position_as_world.y - translation.y;
+        Quat::from_rotation_z(y.atan2(x))
+    };
 
     let color: Color = GRAY_900.into();
     commands.spawn((
@@ -76,8 +90,8 @@ fn spawn_cannonball(
         MeshMaterial2d(materials.add(color)),
         Cannonball,
         Transform {
-            translation: Vec3::new(0.0, CANNON_HEIGHT + 30.0 - window_height / 2.0, 0.0),
-            rotation: Quat::from_rotation_z(0.0),
+            translation,
+            rotation: angle_to_face_cursor,
             ..default()
         },
         Name::new("Cannonball"),
